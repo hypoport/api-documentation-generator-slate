@@ -1,0 +1,167 @@
+<h1 id='kex-vorgang-update-api'>KEX-Vorgang-Update-API</h1><h2 id='inhaltsverzeichnis'>Inhaltsverzeichnis</h2>
+<ul>
+<li><a href="#allgemeines">Allgemeines</a>
+
+<ul>
+<li><a href="#authentifizierung">Authentifizierung</a></li>
+<li><a href="#traceid-zur-nachverfolgbarkeit-von-requests">Nachverfolgbarkeit von Requests</a></li>
+<li><a href="#content-type">Content-Type</a></li>
+<li><a href="#fehlercodes">Fehlercodes</a><br></li>
+</ul></li>
+<li><a href="#dokumente">Dokumente</a>
+
+<ul>
+<li><a href="#request-format">Request Format</a></li>
+<li><a href="#request-beispiel">Beispiel</a></li>
+</ul></li>
+<li><a href="#kommentare">Kommentare</a>
+
+<ul>
+<li><a href="#request-format-1">Request Format</a></li>
+<li><a href="#request-beispiel-1">Beispiel</a></li>
+</ul></li>
+</ul>
+<h1 id='allgemeines'>Allgemeines</h1>
+<p>Dies ist eine Sammlung von verschiedenen Schnittstellen, die es ermöglichen Daten zu einem <strong>existierenden</strong> Vorgang hinzuzufügen oder zu ändern.</p>
+<h2 id='authentifizierung'>Authentifizierung</h2>
+<p>Für jeden Request ist eine Authentifizierung erforderlich.</p>
+
+<p>Die Authentifizierung erfolgt über einen HTTP Header.</p>
+
+<table><thead>
+<tr>
+<th style="text-align: left">Request Header Name</th>
+<th style="text-align: left">Beschreibung</th>
+</tr>
+</thead><tbody>
+<tr>
+<td style="text-align: left">X-Authentication</td>
+<td style="text-align: left">API JWT der Vertriebsorganisation</td>
+</tr>
+</tbody></table>
+
+<p>Das API JWT (JSON Web Token) erhalten Sie von Ihrem Ansprechpartner im <strong>Kredit</strong>Smart-Team. </p>
+
+<p>Schlägt die Authentifizierung fehl, erhält der Aufrufer eine HTTP Response mit Statuscode <strong>401 UNAUTHORIZED</strong>.</p>
+<h2 id='traceid-zur-nachverfolgbarkeit-von-requests'>TraceId zur Nachverfolgbarkeit von Requests</h2>
+<p>Für jeden Request soll eine eindeutige ID generiert werden, die den Request im EUROPACE 2 System nachverfolgbar macht und so bei etwaigen Problemen oder Fehlern die systemübergreifende Analyse erleichtert.</p>
+
+<p>Die Übermittlung der X-TraceId erfolgt über einen HTTP Header. Dieser Header ist optional,
+wenn er nicht gesetzt ist, wird eine ID vom System generiert.  </p>
+
+<table><thead>
+<tr>
+<th style="text-align: left">Request Header Name</th>
+<th style="text-align: left">Beschreibung</th>
+<th style="text-align: left">Beispiel</th>
+</tr>
+</thead><tbody>
+<tr>
+<td style="text-align: left">X-TraceId</td>
+<td style="text-align: left">eindeutige Id für jeden Request</td>
+<td style="text-align: left">sys12345678</td>
+</tr>
+</tbody></table>
+<h2 id='content-type'>Content-Type</h2>
+<p>Die Schnittstelle akzeptiert Daten mit Content-Type &quot;<strong>application/json</strong>&quot;.</p>
+
+<p>Entsprechend muss im Request der Content-Type Header gesetzt werden und zusätzlich das Encoding, wenn es nicht UTF-8 ist.</p>
+
+<table><thead>
+<tr>
+<th style="text-align: left">Request Header Name</th>
+<th style="text-align: left">Header Value</th>
+</tr>
+</thead><tbody>
+<tr>
+<td style="text-align: left">Content-Type</td>
+<td style="text-align: left">application/json</td>
+</tr>
+</tbody></table>
+<h2 id='fehlercodes'>Fehlercodes</h2>
+<p>Wenn der Request nicht erfolgreich verarbeitet werden konnte, liefert die Schnittstelle einen Fehlercode, auf den die aufrufende Anwendung reagieren kann, zurück.</p>
+
+<table><thead>
+<tr>
+<th style="text-align: left">Fehlercode</th>
+<th style="text-align: left">Nachricht</th>
+<th style="text-align: left">Erklärung</th>
+</tr>
+</thead><tbody>
+<tr>
+<td style="text-align: left">400</td>
+<td style="text-align: left">Bad Request</td>
+<td style="text-align: left">Die Daten entsprechen nicht dem erwarteten Format oder Pflichtfelder fehlen</td>
+</tr>
+<tr>
+<td style="text-align: left">401</td>
+<td style="text-align: left">Unauthorized</td>
+<td style="text-align: left">Authentifizierung ist fehlgeschlagen</td>
+</tr>
+<tr>
+<td style="text-align: left">403</td>
+<td style="text-align: left">Forbidden</td>
+<td style="text-align: left">Autorisierung ist fehlgeschlagen</td>
+</tr>
+<tr>
+<td style="text-align: left">410</td>
+<td style="text-align: left">Gone</td>
+<td style="text-align: left">Vorgang ist gelöscht</td>
+</tr>
+</tbody></table>
+
+<p>Weitere Fehlercodes und ihre Bedeutung siehe Wikipedia: <a href="https://de.wikipedia.org/wiki/HTTP-Statuscode">HTTP-Statuscode</a></p>
+<h1 id='dokumente'>Dokumente</h1>
+<p>Diese Schnittstelle ermöglicht das automatisierte Importieren von Dokumenten in 
+einen existierenden <strong>Kredit</strong>Smart-Vorgang.</p>
+
+<p>Dokumente können per <strong>HTTP POST</strong> importiert werden.</p>
+
+<p>Die URL ist:</p>
+
+<p>https://www.europace2.de/kreditsmart/kex/vorgang/{vorgangsnummer}/dokument</p>
+
+<p>Die Daten werden als JSON im Body des POST Requests übermittelt.</p>
+
+<p>Ein erfolgreicher Aufruf resultiert in einer Response mit dem HTTP Statuscode <strong>201 CREATED</strong>.</p>
+<h2 id='request-format'>Request Format</h2>
+<p>Die Angaben werden als JSON im Body des Requests gesendet.</p>
+
+<p>{
+        &quot;filename&quot;: String,
+        &quot;base64Content&quot;: String
+    }</p>
+
+<p>Beide Felder müssen befüllt sein um das Dokument erfolgreich importieren zu können.</p>
+<h3 id='request-beispiel'>Request Beispiel:</h3><pre class="highlight shell"><code>curl -X POST <span class="se">\</span>
+  https://www.europace2.de/kreditsmart/kex/vorgang/123456/dokument <span class="se">\</span>
+  -H <span class="s1">'Content-Type: application/json'</span> <span class="se">\</span>
+  -H <span class="s1">'X-Authentication: xxxxxxx'</span> <span class="se">\</span>
+  -d <span class="s1">'{
+    "filename": "Test.pdf",
+    "base64Content": "JVBERi0xLjMKJcTl8uXrp"
+}'</span>
+</code></pre><h1 id='kommentare'>Kommentare</h1>
+<p>Diese Schnittstelle ermöglicht das automatisierte Importieren von Kommentaren in 
+einen existierenden <strong>Kredit</strong>Smart-Vorgang.</p>
+
+<p>Kommentare können per <strong>HTTP POST</strong> importiert werden.</p>
+
+<p>Die URL ist:</p>
+
+<p>https://www.europace2.de/kreditsmart/kex/vorgang/{vorgangsnummer}/kommentare</p>
+
+<p>Die Daten werden als JSON im Body des POST Requests übermittelt.</p>
+
+<p>Ein erfolgreicher Aufruf resultiert in einer Response mit dem HTTP Statuscode <strong>200 OK</strong>.</p>
+<h2 id='request-format-2'>Request Format</h2>
+<p>Die Kommentare werden als JSON im Body des Requests gesendet. 
+Es kann eine Liste von Strings übermittelt werden. Jedes Element der Liste erzeugt einen neuen Kommentar.</p>
+
+<p>[ <Kommentar> ]</p>
+<h3 id='request-beispiel-2'>Request Beispiel:</h3><pre class="highlight shell"><code>curl -X POST <span class="se">\</span>
+  https://www.europace2.de/kreditsmart/kex/vorgang/123456/kommentare <span class="se">\</span>
+  -H <span class="s1">'Content-Type: application/json'</span> <span class="se">\</span>
+  -H <span class="s1">'X-Authentication: xxxxxxx'</span> <span class="se">\</span>
+  -d <span class="s1">'["Testkommentar"]'</span>
+</code></pre>

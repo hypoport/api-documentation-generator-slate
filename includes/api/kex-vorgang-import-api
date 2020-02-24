@@ -1,0 +1,519 @@
+<h1 id='kex-vorgang-import-api'>KEX-Vorgang-Import-API</h1>
+<p>Die Schnittstelle ermöglicht das automatisierte Anlegen von Vorgängen in <strong>Kredit</strong>Smart.</p>
+
+<p>Unter https://github.com/hypoport/kreditsmart-kex-vorgang-api-schema lieg das zugehörige JSON-Schema das zur Codegenerierung genutzt werden kann.</p>
+<h2 id='anlegen-eines-neuen-vorgangs'>Anlegen eines neuen Vorgangs</h2>
+<p>Neue Vorgänge können per <strong>HTTP POST</strong> angelegt werden.</p>
+
+<p>Die URL für das Anlegen von Echtgeschäftsvorgängen ist:</p>
+
+<p>https://www.europace2.de/kreditsmart/kex/vorgang?environment=PRODUCTION</p>
+
+<p>Die URL für das Anlegen von Testvorgängen ist:</p>
+
+<p>https://www.europace2.de/kreditsmart/kex/vorgang</p>
+
+<p>Die Daten werden als JSON Dokument im Body des POST Requests übermittelt.</p>
+
+<p>Ein erfolgreicher Aufruf resultiert in einer Response mit dem HTTP Statuscode <strong>201 CREATED</strong>.</p>
+<h2 id='authentifizierung'>Authentifizierung</h2>
+<p>Für jeden Request ist eine Authentifizierung erforderlich.</p>
+
+<p>Die Authentifizierung erfolgt über einen HTTP Header.</p>
+
+<table>
+<tr>
+<th>
+Request Header Name</th><th>    Beschreibung</th>
+</tr>
+<tr>
+<td>X-Authentication</td><td>   API JWT der Vertriebsorganisation</td>
+</tr>
+</table>
+
+<p>Das API JWT (JSON Web Token) erhalten Sie von Ihrem Ansprechpartner im <strong>Kredit</strong>Smart-Team. </p>
+
+<p>Schlägt die Authentifizierung fehl, erhält der Aufrufer eine HTTP Response mit Statuscode <strong>401 UNAUTHORIZED</strong>.</p>
+<h2 id='traceid-zur-nachverfolgbarkeit-von-requests'>TraceId zur Nachverfolgbarkeit von Requests</h2>
+<p>Für jeden Request soll eine eindeutige ID generiert werden, die den Request im EUROPACE 2 System nachverfolgbar macht und so bei etwaigen Problemen oder Fehlern die systemübergreifende Analyse erleichtert.</p>
+
+<p>Die Übermittlung der X-TraceId erfolgt über einen HTTP Header. Dieser Header ist optional,
+wenn er nicht gesetzt ist, wir eine ID vom System generiert.</p>
+
+<table>
+<tr>
+<th>Request Header Name</th><th>Beschreibung</th><th>Beispiel</th>
+<tr>
+<td>X-TraceId</td>
+<td>eindeutige Id für jeden Request</td>
+<td>sys12345678</td>
+</tr>
+</table>
+<h2 id='content-type'>Content-Type</h2>
+<p>Die Schnittstelle akzeptiert Daten mit Content-Type &quot;<strong>application/json</strong>&quot;.</p>
+
+<p>Entsprechend muss im Request der Content-Type Header gesetzt werden. Zusätzlich das Encoding, wenn es nicht UTF-8 ist.</p>
+
+<table>
+<tr>
+<th>
+Request Header Name</th><th>    Header Value</th>
+</tr>
+<tr>
+<td>Content-Type</td><td>   application/json</td>
+</tr>
+</table>
+<h3 id='post-request-beispiel'>POST Request Beispiel:</h3>
+<p>POST https://www.europace2.de/kreditsmart/kex/vorgang
+    X-Authentication: xxxxxxx
+    Content-Type: application/json;charset=utf-8
+    {
+        &quot;kundenbetreuer&quot;: {
+            partnerId: &quot;TEST&quot;
+        },
+        &quot;antragsteller1&quot;: {
+            &quot;personendaten&quot;: {
+                &quot;vorname&quot;: &quot;Max&quot;,
+                &quot;nachname&quot;: &quot;Mustermann&quot;
+            }
+        }
+    }</p>
+<h3 id='post-response-beispiel'>POST Response Beispiel:</h3>
+<p>201 CREATED
+    {
+        &quot;vorgangsnummer&quot;: &quot;AB1234&quot;,
+        &quot;messages&quot;: []
+    }</p>
+<h2 id='fehlercodes'>Fehlercodes</h2>
+<p>Wenn der Request nicht erfolgreich verarbeitet werden konnte, liefert die Schnittstelle einen Fehlercode, auf den die aufrufende Anwendung reagieren kann, zurück.</p>
+
+<p>Achtung: In diesem Fall wird kein Vorgang in <strong>Kredit</strong>Smart importiert und angelegt.</p>
+
+<table>
+<tr><th>Fehlercode</th><th>Nachricht</th><th>   Erklärung</th></tr>
+<tr><td>401</td><td>Unauthorized</td><td>Authentifizierung ist fehlgeschlagen</td></tr>
+<tr><td>422</td><td>Unprocessable Entity</td><td>Es wurde keine gültige Kundenbetreuer-Partner-ID angegeben</td></tr>
+</table>
+
+<p>Weitere Fehlercodes und ihre Bedeutung siehe Wikipedia: <a href="https://de.wikipedia.org/wiki/HTTP-Statuscode">HTTP-Statuscode</a></p>
+<h2 id='request-format'>Request Format</h2>
+<p>Die Angaben werden als JSON im Body des Requests gesendet.</p>
+
+<p>Für eine bessere Lesbarkeit wird das Gesamtformat in <em>Typen</em> aufgebrochen, die an anderer Stelle definiert sind, aber an verwendeter Stelle eingesetzt werden müssen.
+Die Attribute innerhalb eines Blocks können in beliebiger Reihenfolge angegeben werden.</p>
+
+<p>Für einen erfolgreichen Request gibt es derzeit nur ein definiertes Pflichtfeld (siehe „Vorgang“).</p>
+
+<p>Alle übermittelten Daten werden in <strong>Kredit</strong>Smart übernommen, mit Ausnahme von:</p>
+
+<ul>
+<li>Angaben, die aufgrund eines abweichenden Formats nicht verstanden werden (z. B. &quot;1&quot; statt &quot;true&quot;, &quot;01.01.2016&quot; statt &quot;2016-01-01&quot;), und </li>
+<li>Angaben, die aufgrund der Datenkonstellationen überflüssig bzw. unstimmig sind (z. B. Angabe beim 1. Antragsteller zu gemeinsamerHaushalt).</li>
+</ul>
+
+<p>An verschiedenen Stellen im Request ist die Angabe eines Landes oder der Staatsangehörigkeit notwendig:
+Die Übermittlung erfolgt im Format <a href="https://de.wikipedia.org/wiki/ISO-3166-1-Kodierliste">ISO-3166/ALPHA-2</a></p>
+<h3 id='vorgang'>Vorgang</h3>
+<p>{
+        &quot;kundenbetreuer&quot;: Partner,
+        &quot;bearbeiter&quot;: Partner,
+        &quot;tippgeber&quot;: Partner,
+        &quot;leadquelle&quot;: String,
+        &quot;eigeneVorgangsnummer&quot;: String,
+        &quot;baufiSmartVorgangsnummer&quot;: String,
+        &quot;antragsteller1&quot;: Antragsteller,
+        &quot;antragsteller2&quot;: Antragsteller,
+        &quot;haushalt&quot;: Haushalt,
+        &quot;finanzbedarf&quot;: Finanzbedarf,
+        &quot;kommentare&quot;: [ String ]
+    }</p>
+
+<p>Das Feld <em>kundenbetreuer.partnerId</em> ist ein Pflichtfeld.</p>
+<h3 id='partner'>Partner</h3>
+<p>{
+        &quot;partnerId&quot;: String
+    }</p>
+
+<p>Die Europace 2 PartnerID ist 5-stellig und hat das Format ABC12. </p>
+<h4 id='antragsteller'>Antragsteller</h4>
+<p>{
+        &quot;herkunft&quot;: Herkunft,
+        &quot;personendaten&quot;: Personendaten,
+        &quot;wohnsituation&quot;: Wohnsituation,
+        &quot;beschaeftigung&quot;: Beschäftigung
+    }</p>
+<h4 id='herkunft'>Herkunft</h4>
+<p>{
+        &quot;arbeitserlaubnisVorhanden&quot;: true | false,
+        &quot;aufenthaltBefristetBis&quot;: &quot;YYYY-MM-DD&quot;,
+        &quot;arbeitserlaubnisBefristetBis&quot;: &quot;YYYY-MM-DD&quot;,
+        &quot;inDeutschlandSeit&quot;: &quot;YYYY-MM-DD&quot;,
+        &quot;staatsangehoerigkeit&quot;: &quot;ALPHA-2 Isocode&quot;,
+        &quot;aufenthaltstitel&quot;: &quot;VISUM&quot; | &quot;AUFENTHALTSERLAUBNIS&quot; | &quot;NIEDERLASSUNGSERLAUBNIS&quot; | &quot;ERLAUBNIS_ZUM_DAUERAUFENTHALT_EU&quot;,
+        &quot;steuerId&quot;: String
+    }</p>
+<h4 id='personendaten'>Personendaten</h4>
+<p>{
+        &quot;titel&quot;: [ &quot;DOKTOR&quot; | &quot;PROFESSOR&quot; ]
+        &quot;anrede&quot;: &quot;FRAU&quot; | &quot;HERR&quot;,
+        &quot;telefonGeschaeftlich&quot;: String,
+        &quot;geburtsdatum&quot;: &quot;YYYY-MM-DD&quot;,
+        &quot;telefonPrivat&quot;: String,
+        &quot;geburtsort&quot;: String,
+        &quot;geburtsland&quot;: &quot;ALPHA-2 Isocode&quot;
+        &quot;vorname&quot;: String,
+        &quot;geburtsname&quot;: String,
+        &quot;nachname&quot;: String,
+        &quot;familienstand&quot;: &quot;LEDIG&quot; | &quot;VERHEIRATET&quot; | &quot;GESCHIEDEN&quot; | &quot;VERWITWET&quot; | &quot;GETRENNT_LEBEND&quot; | &quot;EHEAEHNLICHE_LEBENSGEMEINSCHAFT&quot; | &quot;EINGETRAGENE_LEBENSPARTNERSCHAFT&quot;,
+        &quot;email&quot;: String
+    }</p>
+<h4 id='wohnsituation'>Wohnsituation</h4>
+<p>{
+        &quot;anschrift&quot;: {
+            &quot;strasse&quot;: String,
+            &quot;hausnummer&quot;: String,
+            &quot;plz&quot;: String,
+            &quot;ort&quot;: String,
+            &quot;wohnhaftSeit&quot;: &quot;YYYY-MM-DD&quot;
+        },
+        &quot;gemeinsamerHaushalt&quot;: true | false,
+        &quot;wohnart&quot;: &quot;ZUR_MIETE&quot; | &quot;ZUR_UNTERMIETE&quot; | &quot;IM_EIGENEN_HAUS&quot; | &quot;BEI_DEN_ELTERN&quot;,
+        &quot;anzahlPersonenImHaushalt&quot;: Integer,
+        &quot;anzahlPkw&quot;: Integer,
+        &quot;voranschrift&quot;: {
+            &quot;strasse&quot;: String,
+            &quot;hausnummer&quot;: String,
+            &quot;plz&quot;: String,
+            &quot;ort&quot;: String,
+            &quot;wohnhaftSeit&quot;: &quot;YYYY-MM-DD&quot;
+        }
+    }</p>
+
+<p>Die Angabe <em>gemeinsamerHaushalt</em> ist nur beim zweiten Antragsteller relevant.</p>
+<h4 id='beschaftigung'>Beschäftigung</h4>
+<p>{
+        &quot;beschaeftigungsart&quot;: &quot;ANGESTELLTER&quot; | &quot;ARBEITER&quot; | &quot;ARBEITSLOSER&quot; | &quot;BEAMTER&quot; | &quot;FREIBERUFLER&quot; | &quot;HAUSFRAU&quot; | &quot;RENTNER&quot; | &quot;SELBSTSTAENDIGER&quot;,
+        &quot;arbeiter&quot;: Arbeiter,
+        &quot;angestellter&quot;: Angestellter,<br>
+        &quot;arbeitsloser&quot;: Arbeitsloser,
+        &quot;beamter&quot;: Beamter,
+        &quot;selbststaendiger&quot;: Selbstständiger,
+        &quot;freiberufler&quot;: Freiberufler,
+        &quot;hausfrau&quot;: Hausfrau,
+        &quot;rentner&quot;: Rentner
+    }</p>
+
+<p>Die zu befüllende Felder zur Beschäftigung ist abhängig von der ausgewählten Beschäftigungsart.<BR>Ist keine Beschäftigungsart gesetzt bzw. andere Felder, die nicht zur Beschäftigungsart passen, befüllt, werden sie ignoriert.
+Beispiel: <em>beschaeftigungsart=ARBEITER</em>, dann wird der Knoten <em>arbeiter</em> berücksichtigt</p>
+<h4 id='arbeiter-und-angestellter'>Arbeiter und Angestellter</h4>
+<p>{
+        &quot;beschaeftigungsverhaeltnis&quot;: {
+            &quot;berufsbezeichnung&quot;: String,
+            &quot;nettoeinkommenMonatlich&quot;: Decimal,
+            &quot;arbeitgeber&quot;: Arbeitgeber,
+            &quot;beschaeftigtSeit&quot;: &quot;YYYY-MM-DD&quot;,
+            &quot;befristung&quot;: &quot;BEFRISTET&quot; | &quot;UNBEFRISTET&quot;,
+            &quot;befristetBis&quot;: &quot;YYYY-MM-DD&quot;,
+            &quot;inProbezeit&quot;: true | false
+        },
+        &quot;vorherigesBeschaeftigungsverhaeltnis&quot;: {
+            &quot;arbeitgeber&quot;: {
+                &quot;name&quot;: String,
+                &quot;anschrift&quot;: {
+                    &quot;plz&quot;: String,
+                    &quot;ort&quot;: String
+                }
+            },
+            &quot;beschaeftigtSeit&quot;: &quot;YYYY-MM-DD&quot;,
+            &quot;beschaeftigtBis&quot;: &quot;YYYY-MM-DD&quot;
+        }
+    }</p>
+<h4 id='arbeitsloser-und-hausfrau'>Arbeitsloser und Hausfrau</h4>
+<p>{
+        &quot;sonstigesEinkommenMonatlich&quot;: Decimal
+    }</p>
+<h4 id='selbststandiger-und-freiberufler'>Selbstständiger und Freiberufler</h4>
+<p>{
+        &quot;berufsbezeichnung&quot;: String,
+        &quot;selbststaendigSeit&quot;: &quot;YYYY-MM-DD&quot;,
+        &quot;firma&quot;: {
+            &quot;name&quot;: String,
+            &quot;branche&quot;: Branche,
+            &quot;anschrift&quot;: Anschrift
+        },
+        &quot;nettoeinkommenJaehrlich&quot;: Decimal,
+        &quot;bruttoEinkommenLaufendesJahr&quot;: Decimal,
+        &quot;einkommenssteuerLaufendesJahr&quot;: Decimal,
+        &quot;abschreibungenLaufendesJahr&quot;: Decimal,
+        &quot;bruttoEinkommenLetztesJahr&quot;: Decimal,
+        &quot;einkommenssteuerLetztesJahr&quot;: Decimal,
+        &quot;abschreibungenLetztesJahr&quot;: Decimal,
+        &quot;einkommenssteuerVor2Jahren&quot;: Decimal,
+        &quot;bruttoEinkommenVor2Jahren&quot;: Decimal,
+        &quot;abschreibungenVor2Jahren&quot;: Decimal,
+        &quot;bruttoEinkommenVor3Jahren&quot;: Decimal,
+        &quot;einkommenssteuerVor3Jahren&quot;: Decimal,
+        &quot;abschreibungenVor3Jahren&quot;: Decimal
+    }</p>
+<h4 id='beamter'>Beamter</h4>
+<p>{
+        &quot;beschaeftigungsverhaeltnis&quot;: {
+            &quot;berufsbezeichnung&quot;: String,
+            &quot;inProbezeit&quot;: true | false,
+            &quot;nettoeinkommenMonatlich&quot;: Decimal,
+            &quot;verbeamtetSeit&quot;: &quot;YYYY-MM-DD&quot;,
+            &quot;arbeitgeber&quot;:  Arbeitgeber,
+            &quot;beschaeftigtSeit&quot;: &quot;YYYY-MM-DD&quot;
+        },
+        &quot;vorherigesBeschaeftigungsverhaeltnis&quot;: {
+            &quot;arbeitgeber&quot;: {
+                &quot;name&quot;: String,
+                &quot;anschrift&quot;: {
+                    &quot;plz&quot;: String,
+                    &quot;ort&quot;: String
+                }
+            },
+            &quot;beschaeftigtSeit&quot;: &quot;YYYY-MM-DD&quot;,
+            &quot;beschaeftigtBis&quot;: &quot;YYYY-MM-DD&quot;
+        }
+    }</p>
+<h4 id='rentner'>Rentner</h4>
+<p>{
+        &quot;staatlicheRenteMonatlich&quot;: Decimal,
+        &quot;rentnerSeit&quot;: &quot;YYYY-MM-DD&quot;,
+        &quot;rentenversicherung&quot;: {
+            &quot;name&quot;: String,
+            &quot;anschrift&quot;: {
+                &quot;strasse&quot;: String,
+                &quot;hausnummer&quot;: String,
+                &quot;plz&quot;: String,
+                &quot;ort&quot;: String
+            }
+        }
+    }</p>
+<h4 id='arbeitgeber'>Arbeitgeber</h4>
+<p>{
+        &quot;name&quot;: String,
+        &quot;anschrift&quot;: Anschrift,
+        &quot;branche&quot;: &quot;BAUGEWERBE&quot; | &quot;DIENSTLEISTUNGEN&quot; | &quot;ENERGIE_WASSERVERSORGUNG_BERGBAU&quot; | &quot;ERZIEHUNG_UNTERRICHT&quot; | &quot;GEBIETSKOERPERSCHAFTEN&quot; | &quot;GEMEINNUETZIGE_ORGANISATION&quot; | &quot;GESUNDHEIT_SOZIALWESEN&quot; | &quot;HANDEL&quot; | &quot;HOTEL_GASTRONOMIE&quot; | &quot;INFORMATION_KOMMUNIKATION&quot; | &quot;KREDITINSTITUTE_VERSICHERUNGEN&quot; | &quot;KULTUR_SPORT_UNTERHALTUNG&quot; | &quot;LANDWIRTSCHAFT_FORSTWIRTSCHAFT_FISCHEREI&quot; | &quot;OEFFENTLICHER_DIENST&quot; | &quot;PRIVATE_HAUSHALTE&quot; | &quot;VERARBEITENDES_GEWERBE&quot; | &quot;VERKEHR_LOGISTIK&quot;
+    }</p>
+<h4 id='anschrift'>Anschrift</h4>
+<p>{
+        &quot;strasse&quot;: String,
+        &quot;hausnummer&quot;: String,
+        &quot;plz&quot;: String,
+        &quot;ort&quot;: String,
+        &quot;land&quot;: &quot;ALPHA-2 Isocode&quot;
+    }</p>
+<h4 id='haushalt'>Haushalt</h4>
+<p>{
+        &quot;verbindlichkeiten&quot;: {
+            &quot;geschaeftskredite&quot;: [ Geschäftskredit ],
+            &quot;kontokorrentkredite&quot;: [ Kontokorrentkredit ],
+            &quot;kreditkarten&quot;: [ Kreditkarte ],
+            &quot;dispositionskredite&quot;: [ Dispositionskredit ],
+            &quot;ratenkredite&quot;: [ Ratenkredit ],
+            &quot;leasings&quot;: [ Leasing ],
+            &quot;sonstigeVerbindlichkeiten&quot;: [ Sonstige Verbindlichkeit ]
+        },
+        &quot;vermoegen&quot;: {
+            &quot;depotvermoegen&quot;: [ Depotvermögen ],
+            &quot;sonstigeVermoegenswerte&quot;: [ Sonstiger Vermögenswert ],
+            &quot;bankUndSparguthaben&quot;: [ Bank- und Sparguthaben ],
+            &quot;lebensversicherungen&quot;: [ Lebensversicherung ],
+            &quot;bausparvertraege&quot;: [ Bausparvertrag ]
+        },
+        &quot;ausgaben&quot;: {
+            &quot;privateKrankenversicherungen&quot;: [ Private Krankenversicherung ],
+            &quot;unterhaltsverpflichtungen&quot;: [ Unterhaltsverpflichtung ],
+            &quot;sonstigeAusgaben&quot;: [ Sonstige Ausgabe ],
+            &quot;mietausgaben&quot;: [ Mietausgabe ]
+        },
+        &quot;einnahmen&quot;: {
+            &quot;einkuenfteAusNebentaetigkeit&quot;: [ Einkunft aus Nebentätigkeit ],
+            &quot;ehegattenunterhalt&quot;: [ Ehegattenunterhalt ],
+            &quot;sonstigeEinnahmen&quot;: [ Sonstige Einnahme ],
+            &quot;einkuenfteAusKapitalvermoegen&quot;: [ Einkunft aus Kapitalvermögen ],
+            &quot;unbefristeteZusatzrenten&quot;: [ Unbefristete Zusatzrente ]
+        },
+        &quot;immobilien&quot;: [ Immobilie ],
+        &quot;kinder&quot;: [ kind ],
+        &quot;kontoverbindung&quot;: {
+            &quot;iban&quot;: String,
+            &quot;bic&quot;: String,
+            &quot;kreditinstitut&quot;: String,
+            &quot;gehoertZuAntragsteller&quot;: Antragstellerzuordnung
+        }
+    }</p>
+<h4 id='antragstellerzuordnung'>Antragstellerzuordnung</h4>
+<p>&quot;ANTRAGSTELLER_1&quot; | &quot;ANTRAGSTELLER_2&quot; | &quot;BEIDE&quot;</p>
+<h4 id='ratenkredit-geschaftskredit-und-sonstige-verbindlichkeit'>Ratenkredit, Geschäftskredit und Sonstige Verbindlichkeit</h4>
+<p>{
+        &quot;rateMonatlich&quot;: Decimal,
+        &quot;schlussrate&quot;: Decimal,
+        &quot;datumErsteZahlung&quot;: &quot;YYYY-MM-DD&quot;,
+        &quot;datumLetzteRate&quot;: &quot;YYYY-MM-DD&quot;,
+        &quot;restschuld&quot;: Decimal,
+        &quot;urspruenglicherKreditbetrag&quot;: Decimal,
+        &quot;glaeubiger&quot;: String,
+        &quot;gehoertZuAntragsteller&quot;: Antragstellerzuordnung,
+        &quot;abloesen&quot;: true | false,
+        &quot;iban&quot;: String,
+        &quot;bic&quot;: String,
+        &quot;kreditinstitut&quot;: String 
+    }</p>
+<h4 id='kontokorrentkredit'>Kontokorrentkredit</h4>
+<p>{
+        &quot;beanspruchterBetrag&quot;: Decimal,
+        &quot;verfuegungsrahmen&quot;: Decimal,
+        &quot;glaeubiger&quot;: String,
+        &quot;zinssatz&quot;: Decimal,
+        &quot;gehoertZuAntragsteller&quot;: Antragstellerzuordnung,
+    }           </p>
+<h4 id='kreditkarte'>Kreditkarte</h4>
+<p>{
+        &quot;beanspruchterBetrag&quot;: Decimal,
+        &quot;verfuegungsrahmen&quot;: Decimal,
+        &quot;rateMonatlich&quot;: Decimal,
+        &quot;glaeubiger&quot;: String,
+        &quot;zinssatz&quot;: Decimal,
+        &quot;gehoertZuAntragsteller&quot;: Antragstellerzuordnung,
+        &quot;abloesen&quot;: true | false,
+        &quot;iban&quot;: String,
+        &quot;bic&quot;: String,
+        &quot;kreditinstitut&quot;: String 
+    }</p>
+<h4 id='dispositionskredit'>Dispositionskredit</h4>
+<p>{
+        &quot;beanspruchterBetrag&quot;: Decimal,
+        &quot;verfuegungsrahmen&quot;: Decimal,
+        &quot;glaeubiger&quot;: String,
+        &quot;zinssatz&quot;: Decimal,
+        &quot;gehoertZuAntragsteller&quot;: Antragstellerzuordnung,
+        &quot;abloesen&quot;: true | false,
+        &quot;bic&quot;: String,
+        &quot;iban&quot;: String,
+        &quot;kreditinstitut&quot;: String 
+    }           </p>
+<h4 id='leasing'>Leasing</h4>
+<p>{
+        &quot;rateMonatlich&quot;: Decimal,
+        &quot;schlussrate&quot;: Decimal,
+        &quot;datumLetzteRate&quot;: &quot;YYYY-MM-DD&quot;,
+        &quot;glaeubiger&quot;: String,
+        &quot;gehoertZuAntragsteller&quot;: Antragstellerzuordnung
+    }</p>
+<h4 id='depotvermogen'>Depotvermögen</h4>
+<p>{
+        &quot;betrag&quot;: Decimal,
+        &quot;gehoertZuAntragsteller&quot;: Antragstellerzuordnung
+    }</p>
+<h4 id='sonstiger-vermogenswert'>Sonstiger Vermögenswert</h4>
+<p>{
+        &quot;betrag&quot;: Decimal,
+        &quot;gehoertZuAntragsteller&quot;: Antragstellerzuordnung
+    }</p>
+<h4 id='bank-und-sparguthaben'>Bank- und Sparguthaben</h4>
+<p>{
+        &quot;betrag&quot;: Decimal,
+        &quot;gehoertZuAntragsteller&quot;: Antragstellerzuordnung
+    }</p>
+<h4 id='lebensversicherung'>Lebensversicherung</h4>
+<p>{
+        &quot;rueckkaufswert&quot;: Decimal,
+        &quot;praemieMonatlich&quot;: Decimal,
+        &quot;gehoertZuAntragsteller&quot;: Antragstellerzuordnung
+    }</p>
+<h4 id='bausparvertrag'>Bausparvertrag</h4>
+<p>{
+        &quot;sparbeitragMonatlich&quot;: Decimal,
+        &quot;angesparterBetrag&quot;: Decimal,
+        &quot;gehoertZuAntragsteller&quot;: Antragstellerzuordnung
+    }                           </p>
+<h4 id='private-krankenversicherung-und-unterhaltsverpflichtung'>Private Krankenversicherung und Unterhaltsverpflichtung</h4>
+<p>{
+        &quot;betragMonatlich&quot;: Decimal,
+        &quot;gehoertZuAntragsteller&quot;: &quot;ANTRAGSTELLER_1&quot; | &quot;ANTRAGSTELLER_2&quot;
+    }</p>
+<h4 id='sonstige-ausgabe-und-mietausgabe'>Sonstige Ausgabe und Mietausgabe</h4>
+<p>{
+        &quot;betragMonatlich&quot;: Decimal,
+        &quot;gehoertZuAntragsteller&quot;: Antragstellerzuordnung
+    }</p>
+<h4 id='einkunft-aus-nebentatigkeit'>Einkunft aus Nebentätigkeit</h4>
+<p>{
+        &quot;betragMonatlich&quot;: Decimal,
+        &quot;beginnDerTaetigkeit&quot;: &quot;YYYY-MM-DD&quot;,
+        &quot;gehoertZuAntragsteller&quot;: &quot;ANTRAGSTELLER_1&quot; | &quot;ANTRAGSTELLER_2&quot;
+    }</p>
+<h4 id='ehegattenunterhalt-sonstige-einnahme-einkunft-aus-kapitalvermogen-und-unbefristete-zusatzrente'>Ehegattenunterhalt, Sonstige Einnahme, Einkunft aus Kapitalvermögen und Unbefristete Zusatzrente</h4>
+<p>{
+        &quot;betragMonatlich&quot;: Decimal,
+        &quot;gehoertZuAntragsteller&quot;: &quot;ANTRAGSTELLER_1&quot; | &quot;ANTRAGSTELLER_2&quot;
+    }</p>
+<h4 id='immobilie'>Immobilie</h4>
+<p>{
+        &quot;mieteinnahmenWarmMonatlich&quot;: Decimal,
+        &quot;vermieteteWohnflaeche&quot;: Integer,
+        &quot;gehoertZuAntragsteller&quot;: Antragstellerzuordnung,
+        &quot;nebenkostenMonatlich&quot;: Decimal,
+        &quot;wert&quot;: Decimal,
+        &quot;nutzungsart&quot;: &quot;EIGENGENUTZT&quot; | &quot;VERMIETET&quot; | &quot;EIGENGENUTZT_UND_VERMIETET&quot;,
+        &quot;mieteinnahmenKaltMonatlich&quot;: Decimal,
+        &quot;immobilienart&quot;: &quot;EIGENTUMSWOHNUNG&quot; | &quot;EINFAMILIENHAUS&quot; | &quot;MEHRFAMILIENHAUS&quot; | &quot;BUEROGEBAEUDE&quot;,
+        &quot;bezeichnung&quot;: String,
+        &quot;wohnflaeche&quot;: Integer,
+        &quot;darlehen&quot;: [
+            {
+                &quot;restschuld&quot;: Decimal,
+                &quot;zinsbindungBis&quot;: &quot;YYYY-MM-DD&quot;,
+                &quot;rateMonatlich&quot;: Decimal
+            }
+        ]
+    }           </p>
+<h4 id='kind'>Kind</h4>
+<p>{
+        &quot;name&quot;: String,
+        &quot;kindergeldFuer&quot;: &quot;ERSTES_ODER_ZWEITES_KIND&quot; | &quot;DRITTES_KIND&quot; | &quot;AB_VIERTEM_KIND&quot;,
+        &quot;unterhaltseinnahmenMonatlich&quot;: Decimal,
+        &quot;gehoertZuAntragsteller&quot;: Antragstellerzuordnung
+    }   </p>
+<h4 id='finanzbedarf'>Finanzbedarf</h4>
+<p>{
+        &quot;fahrzeugkauf&quot;: Fahrzeugkauf,
+        &quot;finanzierungszweck&quot;: &quot;UMSCHULDUNG&quot; | &quot;FAHRZEUGKAUF&quot; | &quot;MODERNISIEREN&quot; | &quot;FREIE_VERWENDUNG&quot;,
+        &quot;finanzierungswunsch&quot;:          {
+            &quot;laufzeitInMonaten&quot;: Integer,
+            &quot;ratenzahlungstermin&quot;: &quot;MONATSENDE&quot; | &quot;MONATSMITTE&quot;,
+            &quot;provisionswunschInProzent&quot;: Decimal,
+            &quot;kreditbetrag&quot;: Decimal,
+            &quot;rateMonatlich&quot;: Decimal
+        },
+        &quot;ratenschutz&quot;: {
+            &quot;versicherteRisikenAntragsteller2&quot;: [ &quot;ARBEITSLOSIGKEIT&quot; | &quot;ARBEITSUNFAEHIGKEIT&quot; | &quot;LEBEN&quot; ],
+            &quot;versicherteRisikenAntragsteller1&quot;: [ &quot;ARBEITSLOSIGKEIT&quot; | &quot;ARBEITSUNFAEHIGKEIT&quot; | &quot;LEBEN&quot; ]
+        }
+    }</p>
+<h4 id='fahrzeugkauf'>Fahrzeugkauf</h4>
+<p>{
+        &quot;modell&quot;: String,
+        &quot;marke&quot;: String,
+        &quot;kaufpreis&quot;: Decimal,
+        &quot;erstzulassungsdatum&quot;: &quot;YYYY-MM-DD&quot;,
+        &quot;laufleistung&quot;: Integer,
+        &quot;kw&quot;: Integer,
+        &quot;beglicheneKosten&quot;: Decimal,
+        &quot;ps&quot;: Integer,
+        &quot;anbieter&quot;: &quot;HAENDLER&quot; | &quot;PRIVAT&quot;
+    }</p>
+
+<p>Fahrzeugkauf wird nur ausgewertet, wenn als Finanzierungszweck &quot;FAHRZEUGKAUF&quot; gesetzt ist.</p>
+<h2 id='response-format'>Response Format</h2>
+<p>Die Angaben werden als JSON im Body der Response gesendet.</p>
+
+<p>{
+        &quot;vorgangsnummer&quot;: String,
+        &quot;messages&quot;: [ String ]
+    }</p>
+
+<p>In <em>messages</em> werden nicht übernommene Angaben und andere Hinweise gesendet.</p>

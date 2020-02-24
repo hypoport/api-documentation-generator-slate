@@ -1,0 +1,442 @@
+<h1 id='kex-vorgang-export-api'>KEX-Vorgang-Export-API</h1>
+<p>Die Schnittstelle ermöglicht das automatisierte Auslesen von Vorgängen in KreditSmart.</p>
+
+<blockquote>
+<p>:warning: Diese Schnittstelle wird kontinuierlich weiterentwickelt. Daher erwarten wir 
+von allen Nutzern dieser Schnittstelle, dass sie das &quot;<a href="https://martinfowler.com/bliki/TolerantReader.html">Tolerant Reader Pattern</a>&quot; nutzen, d.h. 
+tolerant gegenüber kompatiblen API-Änderungen beim Lesen und Prozessieren der Daten sind:</p>
+
+<ol>
+<li><p>unbekannte Felder dürfen keine Fehler verursachen</p></li>
+<li><p>Strings mit eingeschränktem Wertebereich (Enums) müssen mit neuen, unbekannten Werten umgehen können</p></li>
+<li><p>sinnvoller Umgang mit HTTP-Statuscodes, die nicht explizit dokumentiert sind  </p></li>
+</ol>
+</blockquote>
+
+<!-- https://opensource.zalando.com/restful-api-guidelines/#108 -->
+<h1 id='table-of-contents'>Table of Contents</h1>
+<ul>
+<li><a href="#allgemeines">Allgemeines</a></li>
+<li><a href="#authentifizierung">Authentifizierung</a></li>
+<li><a href="#traceid-zur-nachverfolgbarkeit-von-requests">TraceId zur Nachverfolgbarkeit von Requests</a></li>
+<li><a href="#content-type">Content-Type</a></li>
+<li><a href="#beispiel">Beispiel</a>
+
+<ul>
+<li><a href="#post-request">POST Request</a></li>
+<li><a href="#post-response">POST Response</a></li>
+</ul></li>
+<li><a href="#fehlercodes">Fehlercodes</a>
+
+<ul>
+<li><a href="#http-status-errors">HTTP-Status Errors</a></li>
+<li><a href="#validation-error">Validation Error</a></li>
+<li><a href="#weitere-fehler">weitere Fehler</a></li>
+</ul></li>
+<li><a href="#request-format">Request Format</a></li>
+<li><a href="#vorgang">Vorgang</a>
+
+<ul>
+<li><a href="#partner">Partner</a></li>
+<li><a href="#antragsteller">Antragsteller</a>
+
+<ul>
+<li><a href="#personendaten">Personendaten</a></li>
+<li><a href="#wohnsituation">Wohnsituation</a></li>
+<li><a href="#beschäftigung">Beschäftigung</a>
+
+<ul>
+<li><a href="#arbeiter-und-angestellter">Arbeiter und Angestellter</a></li>
+<li><a href="#selbstständiger-und-freiberufler">Selbstständiger und Freiberufler</a></li>
+<li><a href="#beamter">Beamter</a></li>
+<li><a href="#arbeitgeber">Arbeitgeber</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#haushalt">Haushalt</a>
+
+<ul>
+<li><a href="#antragstellerzuordnung">Antragstellerzuordnung</a></li>
+<li><a href="#kind">Kind</a></li>
+</ul></li>
+<li><a href="#finanzbedarf">Finanzbedarf</a></li>
+<li><a href="#antrag">Antrag</a></li>
+</ul></li>
+<li><a href="#response-format">Response Format</a></li>
+<li><a href="#tools">Tools</a></li>
+</ul>
+<h2 id='allgemeines'>Allgemeines</h2>
+<p>Vorgänge können über unsere GraphQL Schnittstelle via <strong>HTTP POST</strong> ausgelesen werden werden.<br>
+Die URL für das Auslesen von Vorgängen ist:</p>
+
+<p>https://www.europace2.de/kreditsmart/kex/vorgaenge</p>
+
+<p>Die gewünschten Properties werden als JSON im Body des POST Requests übermittelt.<br>
+Ein erfolgreicher Aufruf resultiert in einer Response mit dem HTTP Statuscode <strong>200 SUCCESS</strong>.<br>
+Die angeforderten Daten werden ebenfalls als JSON übermittelt.</p>
+<h2 id='authentifizierung'>Authentifizierung</h2>
+<p>Für jeden Request ist eine Authentifizierung erforderlich. Die Authentifizierung erfolgt über einen HTTP Header.</p>
+
+<table><thead>
+<tr>
+<th>Request Header Name</th>
+<th>Beschreibung</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>X-Authentication</td>
+<td>API JWT der Vertriebsorganisation oder des Partners</td>
+</tr>
+</tbody></table>
+
+<p>Das API JWT (JSON Web Token) erhalten Sie von Ihrem Ansprechpartner im KreditSmart-Team. Schlägt die Authentifizierung fehl, erhält der Aufrufer eine HTTP Response mit Statuscode <strong>401 UNAUTHORIZED</strong>.</p>
+<h2 id='traceid-zur-nachverfolgbarkeit-von-requests'>TraceId zur Nachverfolgbarkeit von Requests</h2>
+<p>Für jeden Request soll eine eindeutige ID generiert werden, die den Request im EUROPACE 2 System nachverfolgbar macht und so bei etwaigen Problemen oder Fehlern die systemübergreifende Analyse erleichtert.<br>
+Die Übermittlung der X-TraceId erfolgt über einen HTTP-Header. Dieser Header ist optional,
+wenn er nicht gesetzt ist, wird eine ID vom System generiert.</p>
+
+<table><thead>
+<tr>
+<th>Request Header Name</th>
+<th>Beschreibung</th>
+<th>Beispiel</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>X-TraceId</td>
+<td>eindeutige Id für jeden Request</td>
+<td>sys12345678</td>
+</tr>
+</tbody></table>
+<h2 id='content-type'>Content-Type</h2>
+<p>Die Schnittstelle akzeptiert Daten mit Content-Type &quot;<strong>application/json</strong>&quot;.<br>
+Entsprechend muss im Request der Content-Type Header gesetzt werden. Zusätzlich das Encoding, wenn es nicht UTF-8 ist.</p>
+
+<table><thead>
+<tr>
+<th>Request Header Name</th>
+<th>Header Value</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>Content-Type</td>
+<td>application/json</td>
+</tr>
+</tbody></table>
+<h2 id='beispiel'>Beispiel</h2><h3 id='post-request'>POST Request</h3>
+<p>POST https://www.europace2.de/kreditsmart/kex/vorgaenge
+    X-Authentication: xxxxxxx
+    Content-Type: application/json;charset=utf-8</p>
+
+<p>{
+      &quot;query&quot;: &quot;query getVorgang($vorgangsnummer: String!) {
+        vorgang(vorgangsnummer: $vorgangsnummer) {
+          vorgangsnummer
+          bearbeiter {
+            partnerId
+          }
+          kundenbetreuer {
+            partnerId
+          }
+        }
+      }&quot;,
+      &quot;variables&quot;: {
+        &quot;vorgangsnummer&quot;: &quot;123456&quot;
+      }
+    }</p>
+<h3 id='post-response'>POST Response</h3>
+<p>{
+      &quot;data&quot;: {
+        &quot;vorgang&quot;: {
+          &quot;vorgangsnummer&quot;: &quot;123456&quot;,
+          &quot;bearbeiter&quot;: {
+            &quot;partnerId&quot;: &quot;11111&quot;
+          },
+          &quot;kundenbetreuer&quot;: {
+            &quot;partnerId&quot;: &quot;11111&quot;
+          }
+        }
+      },
+      &quot;errors&quot;: []
+    }</p>
+<h2 id='fehlercodes'>Fehlercodes</h2>
+<p>Die Besonderheit in GraphQL ist u.a., dass die meisten Fehler nicht über HTTP-Fehlercodes wiedergegeben werden.
+In vielen Fällen bekommt man einen Status 200 zurück, obwohl ein Fehler aufgetreten ist. Dafür gibt es das Attribut <code>errors</code> in der Response.</p>
+<h3 id='http-status-errors'>HTTP-Status Errors</h3>
+<table><thead>
+<tr>
+<th>Fehlercode</th>
+<th>Nachricht</th>
+<th>weitere Attribute</th>
+<th>Erklärung</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>401</td>
+<td>Unauthorized</td>
+<td>-</td>
+<td>Authentifizierung ist fehlgeschlagen</td>
+</tr>
+<tr>
+<td>410</td>
+<td>Vorgang deleted</td>
+<td>&quot;vorgangsnummer&quot;: &quot;123456&quot;</td>
+<td>Der Vorgang wurde gelöscht</td>
+</tr>
+</tbody></table>
+<h3 id='validation-error'>Validation Error</h3>
+<p>Wenn die GraphQL-Query nicht verarbeitet werden kann, wird eine Response mit errorType <code>ValidationError</code> zurückgegeben.<br>
+Im Beispiel wurde die o.g. query ausgeführt, aber das Feld <code>vorgangsnummer</code> falsch geschrieben (<code>vorgangsnummerr</code>).</p>
+
+<p>{
+      &quot;errors&quot;: [
+        {
+          &quot;message&quot;: &quot;Validation error of type FieldUndefined: Field &#39;vorgangsnummerr&#39; in type &#39;Vorgang&#39; is undefined @ &#39;vorgang/vorgangsnummerr&#39;&quot;,
+          &quot;locations&quot;: [
+            {
+              &quot;line&quot;: 1,
+              &quot;column&quot;: 89
+            }
+          ],
+          &quot;description&quot;: &quot;Field &#39;vorgangsnummerr&#39; in type &#39;Vorgang&#39; is undefined&quot;,
+          &quot;validationErrorType&quot;: &quot;FieldUndefined&quot;,
+          &quot;queryPath&quot;: [
+            &quot;vorgang&quot;,
+            &quot;vorgangsnummerr&quot;
+          ],
+          &quot;errorType&quot;: &quot;ValidationError&quot;
+        }
+      ]
+    }</p>
+<h3 id='weitere-fehler'>Weitere Fehler</h3>
+<p>Wenn der Request nicht erfolgreich verarbeitet werden konnte, liefert die Schnittstelle eine 200, aber in dem Attribut <code>errors</code> sind Fehlerdetails zu finden</p>
+
+<p>{
+      &quot;data&quot;: {},
+      &quot;errors&quot;: [
+        {
+          &quot;message&quot;: MESSAGE,
+          &quot;status&quot;: STATUS_CODE
+        }
+      ]
+    }</p>
+
+<table><thead>
+<tr>
+<th>Fehlercode</th>
+<th>Nachricht</th>
+<th>Erklärung</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>403</td>
+<td>Insufficient access rights</td>
+<td>Es wird versucht auf einen Vorgang zuzugreifen, den die Vertriebsorganisation nicht lesen darf</td>
+</tr>
+</tbody></table>
+<h2 id='request-format'>Request Format</h2>
+<p>Die Angaben werden als JSON im Body des Requests gesendet. Für eine bessere Lesbarkeit wird das Gesamtformat in <em>Typen</em> aufgebrochen, die an anderer Stelle definiert sind, aber an verwendeter Stelle eingesetzt werden müssen.
+Die Attribute innerhalb eines Blocks können in beliebiger Reihenfolge angegeben werden.<br>
+Für einen erfolgreichen Request muss die Query in folgendem Format vorhanden sein (siehe auch den <a href="#post-request">Beispiel Request</a>):</p>
+
+<p>vorgang(vorgangsnummer: <vorgangsnummer>) {
+        <gewünschte Felder>
+    }</p>
+<h2 id='vorgang'>Vorgang</h2>
+<p>{
+      &quot;vorgangsnummer&quot;: String,
+      &quot;datenkontext&quot;: &quot;ECHTGESCHAEFT&quot; | &quot;TESTUMGEBUNG&quot;,
+      &quot;kundenbetreuer&quot;: Partner,
+      &quot;bearbeiter&quot;: Partner,
+      &quot;tippgeber&quot;: Partner,<br>
+      &quot;leadquelle&quot;: String,
+      &quot;eigeneVorgangsnummer&quot;: String,<br>
+      &quot;antragsteller1&quot;: Antragsteller,
+      &quot;antragsteller2&quot;: Antragsteller,
+      &quot;haushalt&quot;: Haushalt,
+      &quot;finanzbedarf&quot;: Finanzbedarf,
+      &quot;aufbewahrung&quot;: {
+        &quot;grund&quot;: &quot;LEAD&quot;, &quot;BERATERHAFTUNG&quot;, &quot;GESCHAEFTSNACHWEIS&quot;,
+        &quot;endetAm&quot;: &quot;yyyy-MM-dd&quot;
+      },
+      &quot;letzteAenderungAm&quot;: &quot;yyyy-MM-dd&#39;T&#39;HH:mm:ss.SSS&quot;,
+      &quot;letztesEreignisAm&quot;: &quot;yyyy-MM-dd&#39;T&#39;HH:mm:ss.SSS&quot;,
+      &quot;prioritaet&quot;: &quot;HOCH&quot;, &quot;NEUTRAL&quot;, &quot;NIEDRIG&quot;,
+      &quot;vorgangsstatus&quot;: {
+        &quot;status&quot;: &quot;AKTIV&quot; | &quot;ARCHIVIERT&quot;
+      },
+      &quot;wiedervorlage&quot;: {
+        &quot;kommentar&quot;: String,
+        &quot;wiedervorlageAm&quot;: &quot;yyyy-MM-dd&quot;
+      }
+      &quot;antraege&quot;: [Antrag]
+    }</p>
+
+<p>:heavy_exclamation_mark: &quot;letzteAenderungAm&quot; zeigt NUR die letzte Änderung der Vorgangs-Daten an. Für Änderungen an den Anträgen wird das Feld &quot;letzteAenderungAm&quot; in jedem Antrag befüllt.</p>
+<h3 id='partner'>Partner</h3>
+<p>{
+      &quot;partnerId&quot;: String
+    }</p>
+
+<p>Die Europace 2 PartnerID ist 5-stellig und hat das Format ABC12. </p>
+<h3 id='antragsteller'>Antragsteller</h3>
+<p>{
+      &quot;personendaten&quot;: Personendaten,
+      &quot;wohnsituation&quot;: Wohnsituation,
+      &quot;beschaeftigung&quot;: Beschäftigung
+    }</p>
+<h4 id='personendaten'>Personendaten</h4>
+<p>{
+      &quot;anrede&quot;: &quot;FRAU&quot; | &quot;HERR&quot;,
+      &quot;email&quot;: String
+      &quot;familienstand&quot;: &quot;LEDIG&quot; | &quot;VERHEIRATET&quot; | &quot;GESCHIEDEN&quot; | &quot;VERWITWET&quot; | &quot;GETRENNT_LEBEND&quot; | &quot;EHEAEHNLICHE_LEBENSGEMEINSCHAFT&quot; | &quot;EINGETRAGENE_LEBENSPARTNERSCHAFT&quot;,
+      &quot;geburtsdatum&quot;: &quot;YYYY-MM-DD&quot;,
+      &quot;nachname&quot;: String,
+      &quot;telefonGeschaeftlich&quot;: String,
+      &quot;telefonPrivat&quot;: String,
+      &quot;titel&quot;: [ &quot;DOKTOR&quot; | &quot;PROFESSOR&quot; ]
+      &quot;vorname&quot;: String,
+    }</p>
+<h4 id='wohnsituation'>Wohnsituation</h4>
+<p>{
+      &quot;anschrift&quot;: {
+        &quot;strasse&quot;: String,
+        &quot;hausnummer&quot;: String,
+        &quot;plz&quot;: String,
+        &quot;ort&quot;: String,
+      },
+      &quot;gemeinsamerHaushalt&quot;: true | false
+    }</p>
+
+<p>Die Angabe <em>gemeinsamerHaushalt</em> ist nur beim zweiten Antragsteller ausgefüllt.</p>
+<h4 id='beschaftigung'>Beschäftigung</h4>
+<p>{ 
+      &quot;beschaeftigungsart&quot;: &quot;ANGESTELLTER&quot; | &quot;ARBEITER&quot; | &quot;ARBEITSLOSER&quot; | &quot;BEAMTER&quot; | &quot;FREIBERUFLER&quot; | &quot;HAUSFRAU&quot; | &quot;RENTNER&quot; | &quot;SELBSTSTAENDIGER&quot;,
+      &quot;angestellter&quot;: Angestellter,<br>
+      &quot;arbeiter&quot;: Arbeiter,
+      &quot;beamter&quot;: Beamter,
+      &quot;freiberufler&quot;: Freiberufler,
+      &quot;selbststaendiger&quot;: Selbstständiger
+    }</p>
+
+<p>:heavy_exclamation_mark: Die befüllten Felder zur Beschäftigung sind abhängig von der Beschäftigungsart.<br>
+<strong>Beispiel:</strong> <em>beschaeftigungsart=ARBEITER</em>, dann wird der Knoten <em>arbeiter</em> befüllt</p>
+<h5 id='arbeiter-und-angestellter'>Arbeiter und Angestellter</h5>
+<p>{
+      &quot;beschaeftigungsverhaeltnis&quot;: {
+        &quot;arbeitgeber&quot;: Arbeitgeber,
+        &quot;befristung&quot;: &quot;BEFRISTET&quot; | &quot;UNBEFRISTET&quot;,
+        &quot;befristetBis&quot;: &quot;YYYY-MM-DD&quot;,
+        &quot;inProbezeit&quot;: true | false
+      }
+    }</p>
+<h5 id='selbststandiger-und-freiberufler'>Selbstständiger und Freiberufler</h5>
+<p>{
+      &quot;firma&quot;: {
+        &quot;name&quot;: String
+      }
+    }</p>
+<h5 id='beamter'>Beamter</h5>
+<p>{
+      &quot;beschaeftigungsverhaeltnis&quot;: {
+        &quot;inProbezeit&quot;: true | false,
+        &quot;arbeitgeber&quot;: Arbeitgeber,
+      },
+    }</p>
+<h5 id='arbeitgeber'>Arbeitgeber</h5>
+<p>{
+      &quot;name&quot;: String
+    }</p>
+<h3 id='haushalt'>Haushalt</h3>
+<p>{
+      &quot;kinder&quot;: [ kind ],
+      &quot;kontoverbindung&quot;: {
+        &quot;iban&quot;: String,
+        &quot;bic&quot;: String,
+        &quot;kreditinstitut&quot;: String,
+        &quot;gehoertZuAntragsteller&quot;: Antragstellerzuordnung
+      }
+    }</p>
+<h4 id='antragstellerzuordnung'>Antragstellerzuordnung</h4>
+<p>&quot;ANTRAGSTELLER_1&quot; | &quot;ANTRAGSTELLER_2&quot; | &quot;BEIDE&quot;</p>
+<h4 id='kind'>Kind</h4>
+<p>{
+      &quot;name&quot;: String,
+      &quot;gehoertZuAntragsteller&quot;: Antragstellerzuordnung
+    }   </p>
+<h3 id='finanzbedarf'>Finanzbedarf</h3>
+<p>{
+      &quot;fahrzeugkauf&quot;: {
+        &quot;kaufpreis&quot;: Decimal,
+      }
+      &quot;finanzierungszweck&quot;: &quot;UMSCHULDUNG&quot; | &quot;FAHRZEUGKAUF&quot; | &quot;MODERNISIEREN&quot; | &quot;FREIE_VERWENDUNG&quot;,
+      &quot;finanzierungswunsch&quot;:            {
+        &quot;laufzeitInMonaten&quot;: Integer,
+        &quot;kreditbetrag&quot;: Decimal,
+        &quot;rateMonatlich&quot;: Decimal
+      }
+    }</p>
+
+<p>Fahrzeugkauf wird nur befüllt, wenn als Finanzierungszweck &quot;FAHRZEUGKAUF&quot; gesetzt ist.</p>
+<h3 id='antrag'>Antrag</h3>
+<p>{
+      &quot;antragsnummer&quot;: String,
+      &quot;produktanbieterantragsnummer&quot;: String,
+      &quot;angenommenAm&quot;: &quot;yyyy-MM-dd&#39;T&#39;HH:mm:ss.SSS&quot;,
+      &quot;letzteAenderungAm&quot;: &quot;yyyy-MM-dd&#39;T&#39;HH:mm:ss.SSS&quot;,
+      &quot;letztesEreignisAm&quot;: &quot;yyyy-MM-dd&#39;T&#39;HH:mm:ss.SSS&quot;,
+      &quot;antragstellerstatus&quot;: {
+        &quot;status&quot;: &quot;BEANTRAGT&quot; | &quot;UNTERSCHRIEBEN&quot; | &quot;NICHT_ANGENOMMEN&quot; | &quot;WIDERRUFEN&quot; 
+      },
+      &quot;produktanbieterstatus&quot;: {
+        &quot;status&quot;: &quot;NICHT_BEARBEITET&quot; | &quot;UNTERSCHRIEBEN&quot; | &quot;ABGELEHNT&quot; | &quot;AUTOMATISCH_ABGELEHNT&quot; | &quot;ZURUECKGESTELLT&quot; 
+      },
+      &quot;provisionsforderungsstatus&quot;: {
+        &quot;status&quot;: &quot;VOLLSTAENDIG_AUSGEZAHLT&quot; 
+      }
+      &quot;produkttyp&quot;: String,
+      &quot;gesamtkonditionen&quot;: Gesamtkonditionen,
+      &quot;ratenkredit&quot;: Ratenkredit
+    }</p>
+
+<p>Der Produkttyp kann aktuell die folgenden Werte annehmen: <code>RATENKREDIT</code>, <code>BAUSPARKASSE_MODERNISIERUNGSKREDIT</code></p>
+<h3 id='ratenkredit'>Ratenkredit</h3>
+<p>{
+      &quot;produktanbieterId&quot;: String,
+      &quot;produktbezeichnung&quot;: String,
+      &quot;produktart&quot;: String,
+      &quot;schlussrate&quot;: BigDecimal,
+      &quot;vorlaufzinsenProTag&quot;: BigDecimal
+    } </p>
+
+<p>Die Produktart kann aktuell die folgenden Werte annhemen: <code>AUTOKREDIT</code>, <code>MODERNISIERUNGSKREDIT</code>, <code>RATENKREDIT</code>, <code>BUSINESSKREDIT</code></p>
+<h3 id='gesamtkonditionen'>Gesamtkonditionen</h3>
+<p>{
+      &quot;auszahlungsbetrag&quot;: BigDecimal,
+      &quot;effektivzins&quot;: BigDecimal,
+      &quot;gesamtkreditbetrag&quot;: BigDecimal,
+      &quot;laufzeitInMonaten&quot;: Int,
+      &quot;monatlicheRate&quot;: BigDecimal,
+      &quot;nettokreditbetrag&quot;: BigDecimal,
+      &quot;sollzins&quot;: BigDecimal
+    }</p>
+
+<p>Prozentwerte wie der Sollzins sind 100-basiert.</p>
+<h2 id='response-format'>Response Format</h2>
+<p>Die erfragten Felder werden - sofern vorhanden- als JSON im Body der Response gesendet. Nicht befüllte Felder werden nicht zurückgegeben.</p>
+
+<p>{ 
+      &quot;data&quot;: {
+        &quot;vorgang&quot;: {
+          &lt;&lt; ANGEFRAGTE FELDER &gt;&gt;
+        }
+      },
+      &quot;errors&quot;: [
+        &lt;&lt; EVENTUELL AUFGETRETENE FEHLER &gt;&gt;
+      ]
+    }</p>
+<h2 id='tools'>Tools</h2>
+<p>Das GraphQL-Schema kann man z.B. mit dem Tool <a href="https://electronjs.org/apps/graphiql">GraphiQL</a> analysieren 
+und sich per Autocomplete bequem die Query zusammenbauen.</p>
+
+<p>Für <a href="https://www.getpostman.com/">Postman</a> stellen wir im <a href="https://github.com/europace/api-schnellstart/">Schnellstarter-Projekt</a> 
+auch eine Collection mit einem Beispiel für die &quot;KreditSmart Vorgänge API&quot; zur Verfügung.</p>

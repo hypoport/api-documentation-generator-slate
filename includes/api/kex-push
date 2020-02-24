@@ -1,0 +1,60 @@
+<h1 id='push-mechanismus-fur-vorgangsanderungen-in-kreditsmart'>Push-Mechanismus für Vorgangsänderungen in KreditSmart</h1>
+<p>Ein externer Client (public subscriber) registriert sich bei EUROPACE und erhält im Gegenzug Zertifikate, um damit eine Verbindung zu AWS herstellen zu können. Für Echtgeschäft und Testumgebung werden getrennte Zertifikate ausgestellt.</p>
+
+<p>Die Zertifikate erhalten Sie von Ihrem Ansprechpartner im KreditSmart-Team. </p>
+
+<p><a href="https://docs.aws.amazon.com/de_de/iot/latest/developerguide/aws-iot-how-it-works.html">AWS</a> versorgt den Client mit Nachrichten anhand von:</p>
+
+<ul>
+<li><a href="https://docs.aws.amazon.com/de_de/iot/latest/developerguide/topics.html">Topic Subscription</a></li>
+<li>Konfigurationsänderungen (<a href="https://docs.aws.amazon.com/de_de/iot/latest/developerguide/iot-device-shadows.html">Device Shadow</a>)</li>
+</ul>
+<h2 id='der-partnerbaum-als-topic'>Der Partnerbaum als Topic</h2>
+<p>Ein Subscriber darf mit seinem Zertifikat alle Topics für Plaketten im Partnerbaum unterhalb seiner eigenen Plakette und für sich selbst empfangen. Zusätzlich darf ein Client sein Shadow-Document abfragen. Dieses informiert über das größtmöglich erlaubte Topic. Sollte sich das Topic ändern - z.B. durch Umorganisation im Partnerbaum - muss der Client geeignet reagieren. Hier empfiehlt sich ein <code>unsubsribe</code> und ein <code>subscribe</code> mit dem neuen Topic.</p>
+
+<p>Für das Topic gelten in <a href="https://docs.aws.amazon.com/general/latest/gr/aws_service_limits.html#iot-protocol-limits">AWS Limits</a>, die beispielsweise eine Tiefe von maximal 7 Ebenen erlaubt.</p>
+
+<p>Um Vorgangsänderungen nicht nur für die eigene Plakette, sondern auch für alle Personen und Organisationen <em>unterhalb</em> der eigenen Plakette zu empfangen, muss in der Subscriber-Implementierung darauf geachtet werden, dass eine Raute <code>#</code> als Platzhalter am Topic ergänzt wird. Wird also ein Zertifikat auf das Topic <code>ECHTGESCHAEFT/PARTNER1/PARTNER2/PARTNER3</code> ausgestellt, dann wird im Subscriber das Topic auf <code>ECHTGESCHAEFT/PARTNER1/PARTNER2/PARTNER3/#</code> konfiguriert. In der Dokumentation zur <a href="https://docs.aws.amazon.com/de_de/iot/latest/developerguide/topics.html">Topic Subscription</a> werden die Möglichkeiten im Detail erläutert.</p>
+<h2 id='payload-message-format'>Payload Message Format</h2>
+<p>Im Body wird eine Payload als JSON in folgendem Format verschickt:</p>
+<pre class="highlight plaintext"><code>{
+    "vorgangsnummer": "VN1245",
+    "kundenbetreuerPartnerbaum": "ECHTGESCHAEFT/PARTNER1/PARTNER2/PARTNER3",
+    "letztesAenderungsDatum": "2019-01-02",
+    "quellsystem": "KREDITSMART"
+}
+</code></pre>
+<p>Zu den Attributen im Detail:</p>
+
+<ul>
+<li><code>vorgangsnummer</code>:</li>
+</ul>
+
+<p>Sowohl bei Änderungen im Vorgang als auch im Antrag wird in einer KEX-PUSH Message stets nur die Vorgangsnummer übermittelt.</p>
+
+<ul>
+<li><code>kundenbetreuerPartnerbaum</code>: </li>
+</ul>
+
+<p>Wegen der <a href="https://docs.aws.amazon.com/general/latest/gr/aws_service_limits.html#iot-protocol-limits">Limitierung des Topics</a> auf maximal 7 Ebenen kann je nach Tiefe der Partnerstruktur ein Topic abgeschnitten werden. Um dem Subscriber dennoch Auskunft über den aktuellen Kundenbetreuer geben zu können, enthält der <code>kundenbetreuerPartnerbaum</code> die vollständige Partnerstruktur.</p>
+
+<ul>
+<li><code>letztesAenderungsDatum</code>:</li>
+</ul>
+
+<p>Das übermittelte Änderungsdatum entspricht dem aktuellen Zeitstempel beim Versand der Message.</p>
+
+<ul>
+<li><code>quellsystem</code>:</li>
+</ul>
+
+<p>Derzeit wird als Quellsystem stets <code>KREDITSMART</code> eingetragen. Das Attribut ist für zukünftige Erweiterungen über KreditSmart hinaus vorgesehen.</p>
+<h2 id='ausloser-und-frequenz-von-push-nachrichten'>Auslöser und Frequenz von Push-Nachrichten</h2>
+<p>Eine Nachricht wird unabhängig von der Art der Änderung eines Vorgangs oder eines Antrags verschickt. Je nach Aktivität am Vorgang ergibt sich daraus eine entsprechende Frequenz an Push-Nachrichten.</p>
+
+<p>Wir aggregieren derzeit keine Nachrichten, d.h. Clients sind selbst dafür verantwortlich die über AWS potentiell eingehende Last zu verarbeiten.</p>
+
+<p>In KreditSmart werden keine Push-Nachrichten aufbewahrt. Daher gehen Nachrichten in den Zeiträumen verloren, in denen kein Subscriber für die jeweiligen Topics mit AWS verbunden ist.</p>
+<h2 id='client-implementierung'>Client-Implementierung</h2>
+<p>Für die Implementierung und Konfiguration eines MQTT Clients gibt es eine Vielzahl von Beispiel-Implementierungen.
+AWS bietet selbst ein passendes Java-SDK an, das unter <a href="https://github.com/aws/aws-iot-device-sdk-java#use-the-sdk">github.com/aws/aws-iot-device-sdk-java</a> inklusive Beispiel-Code dokumentiert ist.</p>

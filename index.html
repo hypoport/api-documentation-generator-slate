@@ -221,9 +221,6 @@
         <ul class="search-results"></ul>
       <ul id="toc" class="toc-list-h1">
           <li>
-            <a href="#bla-bla" class="toc-h1 toc-link" data-title="Bla Bla">Bla Bla</a>
-          </li>
-          <li>
             <a href="#introduction" class="toc-h1 toc-link" data-title="Introduction">Introduction</a>
           </li>
           <li>
@@ -689,6 +686,23 @@
               </ul>
           </li>
           <li>
+            <a href="#ks-kex-vorgang-export" class="toc-h1 toc-link" data-title="KS KEX-Vorgang-Export">KS KEX-Vorgang-Export</a>
+              <ul class="toc-list-h2">
+                  <li>
+                    <a href="#query-vorgangquerytype" class="toc-h2 toc-link" data-title="Query (VorgangQueryType)">Query (VorgangQueryType)</a>
+                  </li>
+                  <li>
+                    <a href="#objects" class="toc-h2 toc-link" data-title="Objects">Objects</a>
+                  </li>
+                  <li>
+                    <a href="#enums" class="toc-h2 toc-link" data-title="Enums">Enums</a>
+                  </li>
+                  <li>
+                    <a href="#scalars" class="toc-h2 toc-link" data-title="Scalars">Scalars</a>
+                  </li>
+              </ul>
+          </li>
+          <li>
             <a href="#errors" class="toc-h1 toc-link" data-title="Errors">Errors</a>
           </li>
       </ul>
@@ -700,7 +714,7 @@
     <div class="page-wrapper">
       <div class="dark-box"></div>
       <div class="content">
-        <h1 id='bla-bla'>Bla Bla</h1><h1 id='introduction'>Introduction</h1>
+        <h1 id='introduction'>Introduction</h1>
 <p>Welcome to the Kittn API! You can use our API to access Kittn API endpoints, which can get information on various cats, kittens, and breeds in our database.</p>
 
 <p>We have language bindings in Shell, Ruby, Python, and JavaScript! You can view code examples in the dark area to the right, and you can switch the programming language of the examples with the tabs in the top right.</p>
@@ -33352,6 +33366,1294 @@ oauth2 ( Scopes: API )
 <td>SONSTIGE_VERWENDUNG</td>
 </tr>
 </tbody></table>
+<h1 id='ks-kex-vorgang-export'>KS KEX-Vorgang-Export</h1><h2 id='query-vorgangquerytype'>Query (VorgangQueryType)</h2>
+<table>
+<thead>
+<tr>
+<th align="left">Field</th>
+<th align="right">Argument</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td colspan="2" valign="top"><strong>vorgang</strong></td>
+<td valign="top"><a href="#vorgang">Vorgang</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" align="right" valign="top">vorgangsnummer</td>
+<td valign="top"><a href="#string">String</a>!</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h2 id='objects'>Objects</h2><h3 id='angestellter'>Angestellter</h3>
+<table>
+<thead>
+<tr>
+<th align="left">Field</th>
+<th align="right">Argument</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td colspan="2" valign="top"><strong>beschaeftigungsverhaeltnis</strong></td>
+<td valign="top"><a href="#beschaeftigungsverhaeltnis">Beschaeftigungsverhaeltnis</a></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3 id='anschrift'>Anschrift</h3>
+<table>
+<thead>
+<tr>
+<th align="left">Field</th>
+<th align="right">Argument</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td colspan="2" valign="top"><strong>strasse</strong></td>
+<td valign="top"><a href="#string">String</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>hausnummer</strong></td>
+<td valign="top"><a href="#string">String</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>plz</strong></td>
+<td valign="top"><a href="#string">String</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>ort</strong></td>
+<td valign="top"><a href="#string">String</a></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3 id='antrag'>Antrag</h3>
+<table>
+<thead>
+<tr>
+<th align="left">Field</th>
+<th align="right">Argument</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td colspan="2" valign="top"><strong>teilantragsnummer</strong> ⚠️</td>
+<td valign="top"><a href="#string">String</a></td>
+<td>
+<p>⚠️ <strong>DEPRECATED</strong></p>
+<blockquote>
+
+Use antragsnummer
+
+</blockquote>
+</td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>antragsnummer</strong></td>
+<td valign="top"><a href="#string">String</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>produktanbieterantragsnummer</strong></td>
+<td valign="top"><a href="#string">String</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>letzteAenderungAm</strong></td>
+<td valign="top"><a href="#localdatetime">LocalDateTime</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>letztesEreignisAm</strong></td>
+<td valign="top"><a href="#localdatetime">LocalDateTime</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>antragstellerstatus</strong></td>
+<td valign="top"><a href="#antragstellerstatusdetails">AntragstellerstatusDetails</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>produktanbieterstatus</strong></td>
+<td valign="top"><a href="#produktanbieterstatusdetails">ProduktanbieterstatusDetails</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>provisionsforderungsstatus</strong></td>
+<td valign="top"><a href="#provisionsforderungsstatusdetails">ProvisionsforderungsstatusDetails</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>angenommenAm</strong></td>
+<td valign="top"><a href="#localdatetime">LocalDateTime</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>produkttyp</strong></td>
+<td valign="top"><a href="#string">String</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>ratenkredit</strong></td>
+<td valign="top"><a href="#ratenkredit">Ratenkredit</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>gesamtkonditionen</strong></td>
+<td valign="top"><a href="#gesamtkonditionen">Gesamtkonditionen</a></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3 id='antragsteller'>Antragsteller</h3>
+<table>
+<thead>
+<tr>
+<th align="left">Field</th>
+<th align="right">Argument</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td colspan="2" valign="top"><strong>personendaten</strong></td>
+<td valign="top"><a href="#personendaten">Personendaten</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>wohnsituation</strong></td>
+<td valign="top"><a href="#wohnsituation">Wohnsituation</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>beschaeftigung</strong></td>
+<td valign="top"><a href="#beschaeftigung">Beschaeftigung</a></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3 id='antragstellerstatusdetails'>AntragstellerstatusDetails</h3>
+<table>
+<thead>
+<tr>
+<th align="left">Field</th>
+<th align="right">Argument</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td colspan="2" valign="top"><strong>status</strong></td>
+<td valign="top"><a href="#antragstellerstatus">Antragstellerstatus</a></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3 id='arbeiter'>Arbeiter</h3>
+<table>
+<thead>
+<tr>
+<th align="left">Field</th>
+<th align="right">Argument</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td colspan="2" valign="top"><strong>beschaeftigungsverhaeltnis</strong></td>
+<td valign="top"><a href="#beschaeftigungsverhaeltnis">Beschaeftigungsverhaeltnis</a></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3 id='arbeitgeber'>Arbeitgeber</h3>
+<table>
+<thead>
+<tr>
+<th align="left">Field</th>
+<th align="right">Argument</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td colspan="2" valign="top"><strong>name</strong></td>
+<td valign="top"><a href="#string">String</a></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3 id='aufbewahrung'>Aufbewahrung</h3>
+<table>
+<thead>
+<tr>
+<th align="left">Field</th>
+<th align="right">Argument</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td colspan="2" valign="top"><strong>grund</strong></td>
+<td valign="top"><a href="#aufbewahrungsgrund">Aufbewahrungsgrund</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>endetAm</strong></td>
+<td valign="top"><a href="#localdate">LocalDate</a></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3 id='beamtenbeschaeftigungsverhaeltnis'>Beamtenbeschaeftigungsverhaeltnis</h3>
+<table>
+<thead>
+<tr>
+<th align="left">Field</th>
+<th align="right">Argument</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td colspan="2" valign="top"><strong>inProbezeit</strong></td>
+<td valign="top"><a href="#boolean">Boolean</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>arbeitgeber</strong></td>
+<td valign="top"><a href="#arbeitgeber">Arbeitgeber</a></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3 id='beamter'>Beamter</h3>
+<table>
+<thead>
+<tr>
+<th align="left">Field</th>
+<th align="right">Argument</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td colspan="2" valign="top"><strong>beschaeftigungsverhaeltnis</strong></td>
+<td valign="top"><a href="#beamtenbeschaeftigungsverhaeltnis">Beamtenbeschaeftigungsverhaeltnis</a></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3 id='beschaeftigung'>Beschaeftigung</h3>
+<table>
+<thead>
+<tr>
+<th align="left">Field</th>
+<th align="right">Argument</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td colspan="2" valign="top"><strong>beschaeftigungsart</strong></td>
+<td valign="top"><a href="#beschaeftigungsart">Beschaeftigungsart</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>angestellter</strong></td>
+<td valign="top"><a href="#angestellter">Angestellter</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>arbeiter</strong></td>
+<td valign="top"><a href="#arbeiter">Arbeiter</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>beamter</strong></td>
+<td valign="top"><a href="#beamter">Beamter</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>freiberufler</strong></td>
+<td valign="top"><a href="#freiberufler">Freiberufler</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>selbststaendiger</strong></td>
+<td valign="top"><a href="#selbststaendiger">Selbststaendiger</a></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3 id='beschaeftigungsverhaeltnis'>Beschaeftigungsverhaeltnis</h3>
+<table>
+<thead>
+<tr>
+<th align="left">Field</th>
+<th align="right">Argument</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td colspan="2" valign="top"><strong>arbeitgeber</strong></td>
+<td valign="top"><a href="#arbeitgeber">Arbeitgeber</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>inProbezeit</strong></td>
+<td valign="top"><a href="#boolean">Boolean</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>befristetBis</strong></td>
+<td valign="top"><a href="#localdate">LocalDate</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>befristung</strong></td>
+<td valign="top"><a href="#befristung">Befristung</a></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3 id='fahrzeugkauf'>Fahrzeugkauf</h3>
+<table>
+<thead>
+<tr>
+<th align="left">Field</th>
+<th align="right">Argument</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td colspan="2" valign="top"><strong>kaufpreis</strong></td>
+<td valign="top"><a href="#bigdecimal">BigDecimal</a></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3 id='finanzbedarf'>Finanzbedarf</h3>
+<table>
+<thead>
+<tr>
+<th align="left">Field</th>
+<th align="right">Argument</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td colspan="2" valign="top"><strong>finanzierungszweck</strong></td>
+<td valign="top"><a href="#finanzierungszweck">Finanzierungszweck</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>finanzierungswunsch</strong></td>
+<td valign="top"><a href="#finanzierungswunsch">Finanzierungswunsch</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>fahrzeugkauf</strong></td>
+<td valign="top"><a href="#fahrzeugkauf">Fahrzeugkauf</a></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3 id='finanzierungswunsch'>Finanzierungswunsch</h3>
+<table>
+<thead>
+<tr>
+<th align="left">Field</th>
+<th align="right">Argument</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td colspan="2" valign="top"><strong>laufzeitInMonaten</strong></td>
+<td valign="top"><a href="#int">Int</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>kreditbetrag</strong></td>
+<td valign="top"><a href="#bigdecimal">BigDecimal</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>rateMonatlich</strong></td>
+<td valign="top"><a href="#bigdecimal">BigDecimal</a></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3 id='firma'>Firma</h3>
+<table>
+<thead>
+<tr>
+<th align="left">Field</th>
+<th align="right">Argument</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td colspan="2" valign="top"><strong>name</strong></td>
+<td valign="top"><a href="#string">String</a></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3 id='freiberufler'>Freiberufler</h3>
+<table>
+<thead>
+<tr>
+<th align="left">Field</th>
+<th align="right">Argument</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td colspan="2" valign="top"><strong>firma</strong></td>
+<td valign="top"><a href="#firma">Firma</a></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3 id='gesamtkonditionen'>Gesamtkonditionen</h3>
+<table>
+<thead>
+<tr>
+<th align="left">Field</th>
+<th align="right">Argument</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td colspan="2" valign="top"><strong>auszahlungsbetrag</strong></td>
+<td valign="top"><a href="#bigdecimal">BigDecimal</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>effektivzins</strong></td>
+<td valign="top"><a href="#bigdecimal">BigDecimal</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>gesamtkreditbetrag</strong></td>
+<td valign="top"><a href="#bigdecimal">BigDecimal</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>laufzeitInMonaten</strong></td>
+<td valign="top"><a href="#int">Int</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>monatlicheRate</strong></td>
+<td valign="top"><a href="#bigdecimal">BigDecimal</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>nettokreditbetrag</strong></td>
+<td valign="top"><a href="#bigdecimal">BigDecimal</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>sollzins</strong></td>
+<td valign="top"><a href="#bigdecimal">BigDecimal</a></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3 id='haushalt'>Haushalt</h3>
+<table>
+<thead>
+<tr>
+<th align="left">Field</th>
+<th align="right">Argument</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td colspan="2" valign="top"><strong>kinder</strong></td>
+<td valign="top">[<a href="#kind">Kind</a>]</td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>kontoverbindung</strong></td>
+<td valign="top"><a href="#kontoverbindung">Kontoverbindung</a></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3 id='kind'>Kind</h3>
+<table>
+<thead>
+<tr>
+<th align="left">Field</th>
+<th align="right">Argument</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td colspan="2" valign="top"><strong>name</strong></td>
+<td valign="top"><a href="#string">String</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>gehoertZuAntragsteller</strong></td>
+<td valign="top"><a href="#antragstellerzugehoerigkeit">Antragstellerzugehoerigkeit</a></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3 id='kontoverbindung'>Kontoverbindung</h3>
+<table>
+<thead>
+<tr>
+<th align="left">Field</th>
+<th align="right">Argument</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td colspan="2" valign="top"><strong>iban</strong></td>
+<td valign="top"><a href="#string">String</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>bic</strong></td>
+<td valign="top"><a href="#string">String</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>kreditinstitut</strong></td>
+<td valign="top"><a href="#string">String</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>gehoertZuAntragsteller</strong></td>
+<td valign="top"><a href="#antragstellerzugehoerigkeit">Antragstellerzugehoerigkeit</a></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3 id='partner'>Partner</h3>
+<table>
+<thead>
+<tr>
+<th align="left">Field</th>
+<th align="right">Argument</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td colspan="2" valign="top"><strong>partnerId</strong></td>
+<td valign="top"><a href="#string">String</a></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3 id='personendaten'>Personendaten</h3>
+<table>
+<thead>
+<tr>
+<th align="left">Field</th>
+<th align="right">Argument</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td colspan="2" valign="top"><strong>anrede</strong></td>
+<td valign="top"><a href="#anrede">Anrede</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>email</strong></td>
+<td valign="top"><a href="#string">String</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>geburtsdatum</strong></td>
+<td valign="top"><a href="#localdate">LocalDate</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>nachname</strong></td>
+<td valign="top"><a href="#string">String</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>familienstand</strong></td>
+<td valign="top"><a href="#familienstand">Familienstand</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>telefonGeschaeftlich</strong></td>
+<td valign="top"><a href="#string">String</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>telefonPrivat</strong></td>
+<td valign="top"><a href="#string">String</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>titel</strong></td>
+<td valign="top">[<a href="#titel">Titel</a>]</td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>vorname</strong></td>
+<td valign="top"><a href="#string">String</a></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3 id='produktanbieterstatusdetails'>ProduktanbieterstatusDetails</h3>
+<table>
+<thead>
+<tr>
+<th align="left">Field</th>
+<th align="right">Argument</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td colspan="2" valign="top"><strong>status</strong></td>
+<td valign="top"><a href="#produktanbieterstatus">Produktanbieterstatus</a></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3 id='provisionsforderungsstatusdetails'>ProvisionsforderungsstatusDetails</h3>
+<table>
+<thead>
+<tr>
+<th align="left">Field</th>
+<th align="right">Argument</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td colspan="2" valign="top"><strong>status</strong></td>
+<td valign="top"><a href="#provisionsforderungsstatus">Provisionsforderungsstatus</a></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3 id='ratenkredit'>Ratenkredit</h3>
+<table>
+<thead>
+<tr>
+<th align="left">Field</th>
+<th align="right">Argument</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td colspan="2" valign="top"><strong>produktanbieterId</strong></td>
+<td valign="top"><a href="#string">String</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>produktbezeichnung</strong></td>
+<td valign="top"><a href="#string">String</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>produktart</strong></td>
+<td valign="top"><a href="#string">String</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>schlussrate</strong></td>
+<td valign="top"><a href="#bigdecimal">BigDecimal</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>vorlaufzinsenProTag</strong></td>
+<td valign="top"><a href="#bigdecimal">BigDecimal</a></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3 id='selbststaendiger'>Selbststaendiger</h3>
+<table>
+<thead>
+<tr>
+<th align="left">Field</th>
+<th align="right">Argument</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td colspan="2" valign="top"><strong>firma</strong></td>
+<td valign="top"><a href="#firma">Firma</a></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3 id='vorgang'>Vorgang</h3>
+<table>
+<thead>
+<tr>
+<th align="left">Field</th>
+<th align="right">Argument</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td colspan="2" valign="top"><strong>vorgangsnummer</strong></td>
+<td valign="top"><a href="#string">String</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>datenkontext</strong></td>
+<td valign="top"><a href="#datenkontext">Datenkontext</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>letzteAenderungAm</strong></td>
+<td valign="top"><a href="#localdatetime">LocalDateTime</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>letztesEreignisAm</strong></td>
+<td valign="top"><a href="#localdatetime">LocalDateTime</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>eigeneVorgangsnummer</strong></td>
+<td valign="top"><a href="#string">String</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>bearbeiter</strong></td>
+<td valign="top"><a href="#partner">Partner</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>kundenbetreuer</strong></td>
+<td valign="top"><a href="#partner">Partner</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>tippgeber</strong></td>
+<td valign="top"><a href="#partner">Partner</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>haushalt</strong></td>
+<td valign="top"><a href="#haushalt">Haushalt</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>finanzbedarf</strong></td>
+<td valign="top"><a href="#finanzbedarf">Finanzbedarf</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>antragsteller1</strong></td>
+<td valign="top"><a href="#antragsteller">Antragsteller</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>antragsteller2</strong></td>
+<td valign="top"><a href="#antragsteller">Antragsteller</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>leadquelle</strong></td>
+<td valign="top"><a href="#string">String</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>vorgangsstatus</strong></td>
+<td valign="top"><a href="#vorgangsstatusdetails">VorgangsstatusDetails</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>prioritaet</strong></td>
+<td valign="top"><a href="#prioritaet">Prioritaet</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>aufbewahrung</strong></td>
+<td valign="top"><a href="#aufbewahrung">Aufbewahrung</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>wiedervorlage</strong></td>
+<td valign="top"><a href="#wiedervorlage">Wiedervorlage</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>antraege</strong></td>
+<td valign="top">[<a href="#antrag">Antrag</a>]</td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" align="right" valign="top">teilantragsnummer</td>
+<td valign="top"><a href="#string">String</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" align="right" valign="top">antragsnummer</td>
+<td valign="top"><a href="#string">String</a></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3 id='vorgangsstatusdetails'>VorgangsstatusDetails</h3>
+<table>
+<thead>
+<tr>
+<th align="left">Field</th>
+<th align="right">Argument</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td colspan="2" valign="top"><strong>status</strong></td>
+<td valign="top"><a href="#vorgangsstatus">Vorgangsstatus</a></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3 id='wiedervorlage'>Wiedervorlage</h3>
+<table>
+<thead>
+<tr>
+<th align="left">Field</th>
+<th align="right">Argument</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td colspan="2" valign="top"><strong>kommentar</strong></td>
+<td valign="top"><a href="#string">String</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>wiedervorlageAm</strong></td>
+<td valign="top"><a href="#localdate">LocalDate</a></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3 id='wohnsituation'>Wohnsituation</h3>
+<table>
+<thead>
+<tr>
+<th align="left">Field</th>
+<th align="right">Argument</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td colspan="2" valign="top"><strong>gemeinsamerHaushalt</strong></td>
+<td valign="top"><a href="#boolean">Boolean</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong>anschrift</strong></td>
+<td valign="top"><a href="#anschrift">Anschrift</a></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h2 id='enums'>Enums</h2><h3 id='anrede'>Anrede</h3>
+<table>
+<thead>
+<th align="left">Value</th>
+<th align="left">Description</th>
+</thead>
+<tbody>
+<tr>
+<td valign="top"><strong>FRAU</strong></td>
+<td></td>
+</tr>
+<tr>
+<td valign="top"><strong>HERR</strong></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3 id='antragstellerstatus'>Antragstellerstatus</h3>
+<table>
+<thead>
+<th align="left">Value</th>
+<th align="left">Description</th>
+</thead>
+<tbody>
+<tr>
+<td valign="top"><strong>BEANTRAGT</strong></td>
+<td></td>
+</tr>
+<tr>
+<td valign="top"><strong>UNTERSCHRIEBEN</strong></td>
+<td></td>
+</tr>
+<tr>
+<td valign="top"><strong>NICHT_ANGENOMMEN</strong></td>
+<td></td>
+</tr>
+<tr>
+<td valign="top"><strong>WIDERRUFEN</strong></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3 id='antragstellerzugehoerigkeit'>Antragstellerzugehoerigkeit</h3>
+<table>
+<thead>
+<th align="left">Value</th>
+<th align="left">Description</th>
+</thead>
+<tbody>
+<tr>
+<td valign="top"><strong>ANTRAGSTELLER_1</strong></td>
+<td></td>
+</tr>
+<tr>
+<td valign="top"><strong>ANTRAGSTELLER_2</strong></td>
+<td></td>
+</tr>
+<tr>
+<td valign="top"><strong>BEIDE</strong></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3 id='aufbewahrungsgrund'>Aufbewahrungsgrund</h3>
+<table>
+<thead>
+<th align="left">Value</th>
+<th align="left">Description</th>
+</thead>
+<tbody>
+<tr>
+<td valign="top"><strong>LEAD</strong></td>
+<td></td>
+</tr>
+<tr>
+<td valign="top"><strong>BERATERHAFTUNG</strong></td>
+<td></td>
+</tr>
+<tr>
+<td valign="top"><strong>GESCHAEFTSNACHWEIS</strong></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3 id='befristung'>Befristung</h3>
+<table>
+<thead>
+<th align="left">Value</th>
+<th align="left">Description</th>
+</thead>
+<tbody>
+<tr>
+<td valign="top"><strong>BEFRISTET</strong></td>
+<td></td>
+</tr>
+<tr>
+<td valign="top"><strong>UNBEFRISTET</strong></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3 id='beschaeftigungsart'>Beschaeftigungsart</h3>
+<table>
+<thead>
+<th align="left">Value</th>
+<th align="left">Description</th>
+</thead>
+<tbody>
+<tr>
+<td valign="top"><strong>ANGESTELLTER</strong></td>
+<td></td>
+</tr>
+<tr>
+<td valign="top"><strong>ARBEITER</strong></td>
+<td></td>
+</tr>
+<tr>
+<td valign="top"><strong>ARBEITSLOSER</strong></td>
+<td></td>
+</tr>
+<tr>
+<td valign="top"><strong>BEAMTER</strong></td>
+<td></td>
+</tr>
+<tr>
+<td valign="top"><strong>FREIBERUFLER</strong></td>
+<td></td>
+</tr>
+<tr>
+<td valign="top"><strong>HAUSFRAU</strong></td>
+<td></td>
+</tr>
+<tr>
+<td valign="top"><strong>RENTNER</strong></td>
+<td></td>
+</tr>
+<tr>
+<td valign="top"><strong>SELBSTSTAENDIGER</strong></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3 id='datenkontext'>Datenkontext</h3>
+<table>
+<thead>
+<th align="left">Value</th>
+<th align="left">Description</th>
+</thead>
+<tbody>
+<tr>
+<td valign="top"><strong>ECHTGESCHAEFT</strong></td>
+<td></td>
+</tr>
+<tr>
+<td valign="top"><strong>TESTUMGEBUNG</strong></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3 id='familienstand'>Familienstand</h3>
+<table>
+<thead>
+<th align="left">Value</th>
+<th align="left">Description</th>
+</thead>
+<tbody>
+<tr>
+<td valign="top"><strong>LEDIG</strong></td>
+<td></td>
+</tr>
+<tr>
+<td valign="top"><strong>VERHEIRATET</strong></td>
+<td></td>
+</tr>
+<tr>
+<td valign="top"><strong>GESCHIEDEN</strong></td>
+<td></td>
+</tr>
+<tr>
+<td valign="top"><strong>VERWITWET</strong></td>
+<td></td>
+</tr>
+<tr>
+<td valign="top"><strong>GETRENNT_LEBEND</strong></td>
+<td></td>
+</tr>
+<tr>
+<td valign="top"><strong>EHEAEHNLICHE_LEBENSGEMEINSCHAFT</strong></td>
+<td></td>
+</tr>
+<tr>
+<td valign="top"><strong>EINGETRAGENE_LEBENSPARTNERSCHAFT</strong></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3 id='finanzierungszweck'>Finanzierungszweck</h3>
+<table>
+<thead>
+<th align="left">Value</th>
+<th align="left">Description</th>
+</thead>
+<tbody>
+<tr>
+<td valign="top"><strong>UMSCHULDUNG</strong></td>
+<td></td>
+</tr>
+<tr>
+<td valign="top"><strong>FAHRZEUGKAUF</strong></td>
+<td></td>
+</tr>
+<tr>
+<td valign="top"><strong>MODERNISIEREN</strong></td>
+<td></td>
+</tr>
+<tr>
+<td valign="top"><strong>FREIE_VERWENDUNG</strong></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3 id='prioritaet'>Prioritaet</h3>
+<table>
+<thead>
+<th align="left">Value</th>
+<th align="left">Description</th>
+</thead>
+<tbody>
+<tr>
+<td valign="top"><strong>HOCH</strong></td>
+<td></td>
+</tr>
+<tr>
+<td valign="top"><strong>NEUTRAL</strong></td>
+<td></td>
+</tr>
+<tr>
+<td valign="top"><strong>NIEDRIG</strong></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3 id='produktanbieterstatus'>Produktanbieterstatus</h3>
+<table>
+<thead>
+<th align="left">Value</th>
+<th align="left">Description</th>
+</thead>
+<tbody>
+<tr>
+<td valign="top"><strong>NICHT_BEARBEITET</strong></td>
+<td></td>
+</tr>
+<tr>
+<td valign="top"><strong>UNTERSCHRIEBEN</strong></td>
+<td></td>
+</tr>
+<tr>
+<td valign="top"><strong>ABGELEHNT</strong></td>
+<td></td>
+</tr>
+<tr>
+<td valign="top"><strong>AUTOMATISCH_ABGELEHNT</strong></td>
+<td></td>
+</tr>
+<tr>
+<td valign="top"><strong>ZURUECKGESTELLT</strong></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3 id='provisionsforderungsstatus'>Provisionsforderungsstatus</h3>
+<table>
+<thead>
+<th align="left">Value</th>
+<th align="left">Description</th>
+</thead>
+<tbody>
+<tr>
+<td valign="top"><strong>VOLLSTAENDIG_AUSGEZAHLT</strong></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3 id='titel'>Titel</h3>
+<table>
+<thead>
+<th align="left">Value</th>
+<th align="left">Description</th>
+</thead>
+<tbody>
+<tr>
+<td valign="top"><strong>DOKTOR</strong></td>
+<td></td>
+</tr>
+<tr>
+<td valign="top"><strong>PROFESSOR</strong></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3 id='vorgangsstatus'>Vorgangsstatus</h3>
+<table>
+<thead>
+<th align="left">Value</th>
+<th align="left">Description</th>
+</thead>
+<tbody>
+<tr>
+<td valign="top"><strong>AKTIV</strong></td>
+<td></td>
+</tr>
+<tr>
+<td valign="top"><strong>ARCHIVIERT</strong></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h2 id='scalars'>Scalars</h2><h3 id='bigdecimal'>BigDecimal</h3>
+<p>BigDecimal</p>
+<h3 id='boolean'>Boolean</h3>
+<p>Built-in Boolean</p>
+<h3 id='int'>Int</h3>
+<p>Built-in Int</p>
+<h3 id='localdate'>LocalDate</h3>
+<p>Local Date</p>
+<h3 id='localdatetime'>LocalDateTime</h3>
+<p>Local DateTime</p>
+<h3 id='string'>String</h3>
+<p>Built-in String</p>
 <h1 id='errors'>Errors</h1>
 <aside class="notice">
 This error section is stored in a separate file in <code>includes/_errors.md</code>. Slate allows you to optionally separate out your docs into many files...just save them to the <code>includes</code> folder and add them to the top of your <code>index.md</code>'s frontmatter. Files are included in the order listed.
