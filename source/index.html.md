@@ -1,20 +1,24 @@
 ---
 title: API Reference
+  
+language_tabs:
+  - shell: curl
+  - java: Java
+  - javascript: JavaScript
 
-language_tabs: # must be one of https://git.io/vQNgJ
-  - shell
-  - ruby
-  - python
-  - javascript
 
 toc_footers:
   - <a href='#'>Sign Up for a Developer Key</a>
   - <a href='https://github.com/slatedocs/slate'>Documentation Powered by Slate</a>
 
 includes:
+  - api/vorgaenge
   - errors
 
+highlight_theme: darkula
+
 search: true
+headingLevel: 2
 ---
 
 # Introduction
@@ -236,4 +240,3 @@ This endpoint deletes a specific kitten.
 Parameter | Description
 --------- | -----------
 ID | The ID of the kitten to delete
-
